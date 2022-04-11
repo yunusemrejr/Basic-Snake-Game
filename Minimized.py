@@ -5,24 +5,24 @@ icon = pygame.image.load('gameico.png')
 pygame.display.set_icon(icon)
 
 class Player():
-    def __init__(this):
+    def __init__ (this):
         this.length = 1
         this.positions=[( (screen_width/2), (screen_height/2))]
         this.direction= random.choice( [up,down,right,left] )
         this.color=(51,0,102)
         this.score=0
     
-    def get_head_position(this):
+    def headPosition(this):
         return this.positions[0]
     
-    def turn(this, point):
+    def rotate(this, point):
         if this.length > 1 and (point[0]*-1, point[1]*-1)==this.direction:
             return
         else:
             this.direction= point
 
     def move(this):
-        headPosition = this.get_head_position()
+        headPosition = this.headPosition()
         x,y=this.direction
         newP = (((headPosition[0]+(x*gridsize))%screen_width), (headPosition[1]+(y*gridsize))%screen_height)
         if len(this.positions) > 2 and newP in this.positions[2:]:
@@ -52,23 +52,19 @@ class Player():
 
             elif event.type==pygame.KEYDOWN:
                 if event.key==pygame.K_UP:
-                    this.turn(up)
+                    this.rotate(up)
 
-            elif event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_DOWN:
-                    this.turn(down)
+                elif event.key==pygame.K_DOWN:
+                    this.rotate(down)
             
-            elif event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_LEFT:
-                    this.turn(left)
+                elif event.key==pygame.K_LEFT:
+                    this.rotate(left)
 
-            elif event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_RIGHT:
-                    this.turn(right)
+                elif event.key==pygame.K_RIGHT:
+                    this.rotate(right)
 
-            elif event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_f:
-                    this.turn(boost)
+                elif event.key==pygame.K_f:
+                    this.rotate(boost)
 
 
 class Food():
@@ -117,7 +113,8 @@ def first3Seconds():
     snake=Player()
     food=Food()
     myfont = pygame.font.SysFont("times",54)
-
+    
+     
     while(1):
         clock.tick(20)
         snake.handle_keys()
@@ -146,16 +143,15 @@ def main():
         snake.handle_keys()
         drawGrid(surface)
         snake.move()
-        if snake.get_head_position()==food.position:
+        if snake.headPosition()==food.position:
             snake.length+=1
             snake.score +=1
             food.randomize_position()
-            snake.draw(surface)
-            snake.draw(surface)
-            screen.blit(surface,(0,0))
-            text=myfont.render("your score is: {0}".format(snake.score),1,(255,0,0))
-            screen.blit(text,(15,10))
-            pygame.display.update()
+        snake.draw(surface)
+        food.draw(surface)
+        screen.blit(surface,(0,0))
+        text=myfont.render("your score is: {0}".format(snake.score),1,(255,0,0))
+        screen.blit(text,(15,10))
+        pygame.display.update()
 
-first3Seconds()  
-            
+first3Seconds()
